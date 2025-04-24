@@ -47,42 +47,56 @@ bool getPlayerInput(
 // Room Logic
 class Room {
 public:
+	int getRoom1Input() {
+		std::cin >> playerInput;
+		if (getPlayerInput(playerInput)) {
+			return 3;
+		}
+
+			if (playerInput == "north") {
+				cout << "Moving North" << endl;
+				playerRoom = 2;
+				playerMoved = true;
+			}
+		return 3;
+	}
+
 	int room1() {
 		playerRoom = 1;
 		cout << playerName << ": AAGH! What is that stench?" << endl;
 		cout << playerName << ": ";
 		while (true && gameStarted == true) {
-			std::cin >> playerInput;
-			// Check general commands first
-			if (!getPlayerInput(playerInput)) {
-				if (playerInput == "north") {
-					cout << "Moving North" << endl;
-					playerRoom = 2;
-					playerMoved = true;
-					break;
-				}
+			if(getRoom1Input() == 3) {
+				break;
 			}
 		}
 		return 3;
 	}
+
+	int getRoom2Input() {
+		std::cin >> playerInput;
+		if (getPlayerInput(playerInput)) {
+			return 3;
+		}
+
+			if (playerInput == "south") {
+				cout << "Moving South" << endl;
+				playerRoom = 1;
+				playerMoved = true;
+			}
+		return 3;
+	}
+
 	int room2() {
 		playerRoom = 2;
 		cout << playerName << ": This isn't too much worse, smell wise" << endl;
 		cout << playerName << ": ";
 
 		while (true && gameStarted == true) {
-			std::cin >> playerInput;
-
-			if (!getPlayerInput(playerInput)) {
-				if (playerInput == "south") {
-					cout << "Moving South" << endl;
-					playerRoom = 1;
-					playerMoved = true;
-					break;
-				}
+			if(getRoom2Input() == 3) {
+				break;
 			}
 		}
-
 		return 3;
 	}
 
