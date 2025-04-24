@@ -110,10 +110,11 @@ public:
 };
 
 // Move Player
-void onPlayerMove() {
+void onPlayerMove(/*string& playerLastRoom*/) { // TODO: Set playerCurrentRoom to playerRoom : (playerController.playerCurrentRoom)
 	while (true) {
 		if (playerMoved == true) {
 			Room currentRoom;
+			//playerLastRoom = playerRoom;
 			playerMoved = false;
 			currentRoom.room();
 		}
@@ -154,8 +155,6 @@ int main() {
 				if (!playerRoomString.empty() &&
 					all_of(playerRoomString.begin(), playerRoomString.end(),
 						   ::isdigit)) {
-					cout << endl;
-					cout << "playerRoomString: " << playerRoomString << endl;
 					playerRoom = stoi(playerRoomString);
 				}
 					else {
@@ -178,22 +177,12 @@ int main() {
 	gameStarted = true;
 
 	cout << endl;
-	cout << "Initializing..." << endl;
-	cout << "---" << endl;
-	// Close playerSave
-	checkPlayerSave.close();
-	if (!checkPlayerSave.is_open()) {
-		cout << "playerSave Closed" << endl;
-	}
+	cout << "INITIALIZING...\n";
 
 	ifstream iplayerChar(playerSavePath);
 
-	// Get Save State
 	if (!iplayerChar) {
 		cerr << "Error: STOK002 iplayerChar Failed to Open";
-	} else {
-		cout << "iplayerCharOpened";
-		cout << endl;
 	}
 
 	iplayerCharLine = 0;
@@ -205,30 +194,21 @@ int main() {
 			if (!playerRoomString.empty() &&
 				all_of(playerRoomString.begin(), playerRoomString.end(),
 					   ::isdigit)) {
-				cout << endl;
-				cout << "playerRoomString: " << playerRoomString << endl;
 				playerRoom = stoi(playerRoomString);
 			} else {
-				cerr << "Error: STOK001 Invalid player room data in save file."
-					 << endl;
-				cout << endl;
-				cout << "playerRoomString: " << "null or invalid" << endl;
+				cerr << "Error: STOK001 Invalid player room data in save file.\n" << endl;
 			}
 			break;
 		}
 	}
 	// Load Complete
 
-	cout << endl;
-	cout << "---" << endl;
-	cout << "Initialized" << endl;
-	cout << "---" << endl;
-	cout << "Greetings, ";
-	cout << playerName << endl << endl;;
 	PlayerController playerController(playerName);
 	playerController.player = playerName;
 	playerController.playerCurrentRoom = playerRoom;
 
+	cout << "Greetings, " << playerName << "." << endl;
+	cout << "Now, where were we?\n\n";
 	Room rooms;
 
 	if (gameStarted == true) {
@@ -241,7 +221,6 @@ int main() {
 			else {
 				rooms.room();
 			}
-
 		thread playerMoveThread(onPlayerMove);
 		playerMoveThread.join();
 		// getPlayerInput(iplayerChar, saveGame);

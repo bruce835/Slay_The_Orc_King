@@ -5,20 +5,21 @@ using namespace std;
 
 // Init playersave Variables
 int PlayerController::save() {
-			cout << "SAVING" << endl;
+			cout << "SAVING..." << endl;
 			ofstream saveGame("PlayerSaves/" + player +".txt", ios::trunc);
 			// Save Block (I don't feel like making this a function because I do not like pointers.
 			saveGame << "Player Name : " << player << ";" << endl;
 			saveGame << playerCurrentRoom << endl;
-			cout << playerCurrentRoom << endl;
 			saveGame << health << endl;
 			saveGame << maxHealth << endl;
 			saveGame << mana << endl;
 			saveGame << maxMana << endl;
-			saveGame << level << endl;
+			saveGame << level << endl;;
 			saveGame.close();
+			cout << "DONE.\n" << endl;
 			return 0;
 }
+
 PlayerController::PlayerController(string& playerName) {
 	player = playerName;
 	health = 0;
@@ -35,11 +36,11 @@ PlayerController::PlayerController(string& playerName) {
 		int playerStat;
 
 
-		while(!playerChar.eof() && playerCharLine <= 7) {
+		while(!playerChar.eof() && playerCharLine < 7) {
 			playerCharLine++;
 			getline(playerChar, playerCharDestination);
 
-		    if (playerCharLine < 3 || playerCharLine > 7) {
+		    if (playerCharLine < 2 || playerCharLine > 7) {
 		        continue; // Move to the next line without processing
 		    }
 
@@ -52,6 +53,10 @@ PlayerController::PlayerController(string& playerName) {
 	            cerr << "Number out of range on line " << playerCharLine << ": " << playerCharDestination << endl;
 	            continue;
 	        }
+
+	        if(playerCharLine == 2) {
+				playerCurrentRoom = playerStat;
+			}
 
 	        if(playerCharLine == 3) {
 				health = playerStat;
@@ -71,12 +76,13 @@ PlayerController::PlayerController(string& playerName) {
 
 			if(playerCharLine == 7) {
 				level = playerStat;
+				cout << "DONE.\n";
+				break;
 			}
-			break;
 		}
 		if (playerCurrentRoom == 0 || level == 0) {
 			// Set Default Stats
-			cout << "Setting Default Stats" << endl;
+			cout << "\n" << "Setting Default Stats" << endl;
 			health = 10;
 			mana = 10;
 			maxHealth = 10;
