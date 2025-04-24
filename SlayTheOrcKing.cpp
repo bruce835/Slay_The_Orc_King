@@ -19,29 +19,23 @@ bool gameStarted = false;
 int playerRoom;
 // Read/Write/Create playerSave File
 fstream playerSave;
-PlayerController playerController;
 // Has player moved
 bool playerMoved = false;
 // Non-Room-Specific Input
 bool generalInput = false;
 
-bool getPlayerInput(
-	/*ifstream& iplayerChar, ofstream& saveGame*/ string &input) {
+bool getPlayerInput(string &input) {
 	if (input == "help") {
 		cout << "This is a list of basic commands: " << endl;
 		return true;
-	} else if (input == "quit") {
-		cout << "Quitting"
-			 << endl; /*TODO: Implement save functionality (probably in a
-						 function nested within getPlayerInput)*/
-		// iplayerChar.close();
-		// saveGame << "Player Name : " << playerName << ";" << endl;
-		// saveGame << playerRoom;
-		// cout << playerRoom << endl;
-		exit(0);
-	} else {
-		return false;
 	}
+		else if (input == "quit") {
+			cout << "Quitting" << endl;
+			exit(0);
+	}
+		else {
+			return false;
+		}
 }
 
 // Room Logic
@@ -148,6 +142,7 @@ int main() {
 		playerSave.close();
 	}
 
+	//THIS CODE IS VERY BAD VERRRY VERY BAD
 	// Ensure Player Room is valid
 	else {
 		iplayerCharLine = 0;
@@ -162,24 +157,24 @@ int main() {
 					cout << endl;
 					cout << "playerRoomString: " << playerRoomString << endl;
 					playerRoom = stoi(playerRoomString);
-				} else {
-					playerRoom = 1;
-					playerSave.open(playerSavePath, fstream::in | fstream::out |
-														fstream::trunc);
-					playerSave << "Player Name: " << playerName << ";" << endl;
-					playerSave << "1";
-					playerSave.close();
 				}
-				break;
+					else {
+						playerRoom = 1;
+						playerSave.open(playerSavePath, fstream::in | fstream::out |
+															fstream::trunc);
+						playerSave << "Player Name: " << playerName << ";" << endl;
+						playerSave << "1" << endl;
+
+
+						playerSave.close();
+					}
+					break;
 			}
 		}
 	}
 
 	checkPlayerSave.seekg(13, istream::beg);
 	checkPlayerSave.getline(playerNameDestination, 10, ';');
-	cout << "Greetings, ";
-	cout << playerNameDestination << endl << endl;
-	; /*TODO: Fix player name not printing*/
 	gameStarted = true;
 
 	cout << endl;
@@ -228,25 +223,24 @@ int main() {
 	cout << "---" << endl;
 	cout << "Initialized" << endl;
 	cout << "---" << endl;
+	cout << "Greetings, ";
+	cout << playerName << endl << endl;;
+	PlayerController playerController(playerName);
+	playerController.player = playerName;
+	playerController.playerCurrentRoom = playerRoom;
+
 	Room rooms;
 
 	if (gameStarted == true) {
-		ofstream saveGame(playerSavePath, ios::trunc);
 
-		saveGame << "Player Name : " << playerName << ";" << endl;
-		cout << playerRoom << endl;
-		saveGame << playerRoom;
-		/*saveGame << playerController.health;
-		 saveGame << playerController.maxHealth;
-		 saveGame << playerController.mana;
-		 saveGame << playerController.maxMana;*/
 		if (playerRoom <= 0) {
 			cerr << "Error: STOK003 playerRoom is not set correctly." << endl;
 			return 1;
 			rooms.room();
-		} else {
-			rooms.room();
 		}
+			else {
+				rooms.room();
+			}
 
 		thread playerMoveThread(onPlayerMove);
 		playerMoveThread.join();
