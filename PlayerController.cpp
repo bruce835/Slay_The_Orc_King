@@ -35,6 +35,7 @@ PlayerController::PlayerController(string& playerName) {
 		string playerCharDestination;
 		int playerStat;
 
+		cout << "PlayerController.cpp ran with player name " << player << endl;
 
 		while(!playerChar.eof() && playerCharLine < 7) {
 			playerCharLine++;
@@ -73,6 +74,7 @@ PlayerController::PlayerController(string& playerName) {
 			if(playerCharLine == 6) {
 				maxMana = playerStat;
 			}
+
 
 			if(playerCharLine == 7) {
 				level = playerStat;

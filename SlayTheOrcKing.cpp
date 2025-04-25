@@ -21,8 +21,6 @@ int playerRoom;
 fstream playerSave;
 // Has player moved
 bool playerMoved = false;
-// Non-Room-Specific Input
-bool generalInput = false;
 
 bool getPlayerInput(string &input) {
 	if (input == "help") {
@@ -97,6 +95,7 @@ public:
 	// Room Map
 	using roomFunction = function<int()>;
 	int room() {
+		cout << "room() ran\n";
 		map<int, roomFunction> roomMap = {{1, std::bind(&Room::room1, this)},
 										  {2, std::bind(&Room::room2, this)}};
 
@@ -129,101 +128,21 @@ int main() {
 	cout << "Adventurer: ";
 	cin >> playerName;
 
-	// Check playerSave
-	playerSavePath = "PlayerSaves/" + playerName + ".txt";
-	ifstream checkPlayerSave;
-	checkPlayerSave.open(playerSavePath);
-
-	// Create New PlayerSave
-	if (!checkPlayerSave) {
-		playerSave.open(playerSavePath,
-						fstream::in | fstream::out | fstream::trunc);
-		playerSave << "Player Name: " << playerName << ";" << endl;
-		playerSave << "1";
-		playerSave.close();
-	}
-
-	//THIS CODE IS VERY BAD VERRRY VERY BAD
-	// Ensure Player Room is valid
-	else {
-		iplayerCharLine = 0;
-		checkPlayerSave.clear();
-		while (!checkPlayerSave.eof()) {
-			iplayerCharLine++;
-			getline(checkPlayerSave, playerRoomString);
-			if (iplayerCharLine == 2) {
-				if (!playerRoomString.empty() &&
-					all_of(playerRoomString.begin(), playerRoomString.end(),
-						   ::isdigit)) {
-					playerRoom = stoi(playerRoomString);
-				}
-					else {
-						playerRoom = 1;
-						playerSave.open(playerSavePath, fstream::in | fstream::out |
-															fstream::trunc);
-						playerSave << "Player Name: " << playerName << ";" << endl;
-						playerSave << "1" << endl;
-
-
-						playerSave.close();
-					}
-					break;
-			}
-		}
-	}
-
-	checkPlayerSave.seekg(13, istream::beg);
-	checkPlayerSave.getline(playerNameDestination, 10, ';');
-	gameStarted = true;
-
 	cout << endl;
 	cout << "INITIALIZING...\n";
-
-	ifstream iplayerChar(playerSavePath);
-
-	if (!iplayerChar) {
-		cerr << "Error: STOK002 iplayerChar Failed to Open";
-	}
-
-	iplayerCharLine = 0;
-	iplayerChar.clear();
-	while (!iplayerChar.eof()) {
-		iplayerCharLine++;
-		getline(iplayerChar, playerRoomString);
-		if (iplayerCharLine == 2) {
-			if (!playerRoomString.empty() &&
-				all_of(playerRoomString.begin(), playerRoomString.end(),
-					   ::isdigit)) {
-				playerRoom = stoi(playerRoomString);
-			} else {
-				cerr << "Error: STOK001 Invalid player room data in save file.\n" << endl;
-			}
-			break;
-		}
-	}
-	// Load Complete
-
 	PlayerController playerController(playerName);
 	playerController.player = playerName;
-	playerController.playerCurrentRoom = playerRoom;
 
 	cout << "Greetings, " << playerName << "." << endl;
 	cout << "Now, where were we?\n\n";
+	gameStarted = true;
 	Room rooms;
+	playerRoom = playerController.playerCurrentRoom;
 
 	if (gameStarted == true) {
-
-		if (playerRoom <= 0) {
-			cerr << "Error: STOK003 playerRoom is not set correctly." << endl;
-			return 1;
-			rooms.room();
-		}
-			else {
-				rooms.room();
-			}
+		rooms.room();
 		thread playerMoveThread(onPlayerMove);
 		playerMoveThread.join();
-		// getPlayerInput(iplayerChar, saveGame);
 	}
 	return 0;
 }
