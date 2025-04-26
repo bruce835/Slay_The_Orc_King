@@ -14,6 +14,7 @@ public:
 	int playerCurrentRoom;
 	std::string player;
 	int save();
+	int stage;
 public:
 	PlayerController(std::string& playerName);
 };

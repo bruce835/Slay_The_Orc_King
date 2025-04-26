@@ -21,6 +21,7 @@ int playerRoom;
 fstream playerSave;
 // Has player moved
 bool playerMoved = false;
+PlayerController* globalPlayerController = nullptr;
 
 bool getPlayerInput(string &input) {
 	if (input == "help") {
@@ -44,11 +45,16 @@ public:
 		if (getPlayerInput(playerInput)) {
 			return 3;
 		}
-
+			bool validInput = false;
 			if (playerInput == "north") {
 				cout << "Moving North" << endl;
 				playerRoom = 2;
 				playerMoved = true;
+				validInput = true;
+			}
+			if (validInput == false) {
+				cout << "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?\n";
+				cout << playerName << ": ";
 			}
 		return 3;
 	}
@@ -71,11 +77,18 @@ public:
 			return 3;
 		}
 
-			if (playerInput == "south") {
+		bool validInput = false;
+		if (playerInput == "south") {
 				cout << "Moving South" << endl;
 				playerRoom = 1;
 				playerMoved = true;
+				validInput = true;
 			}
+			if (validInput == false) {
+                                cout << "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?\n";
+                                cout << playerName << ": ";
+                        }
+
 		return 3;
 	}
 
@@ -95,13 +108,12 @@ public:
 	// Room Map
 	using roomFunction = function<int()>;
 	int room() {
-		cout << "room() ran\n";
 		map<int, roomFunction> roomMap = {{1, std::bind(&Room::room1, this)},
 										  {2, std::bind(&Room::room2, this)}};
 
-		auto it = roomMap.find(playerRoom); // Find the room by playerRoom
+		auto it = roomMap.find(playerRoom);
 		if (it != roomMap.end()) {
-			return it->second(); // Call the function associated with the room
+			return it->second();
 		}
 
 		return 2;
@@ -109,11 +121,11 @@ public:
 };
 
 // Move Player
-void onPlayerMove(/*string& playerLastRoom*/) { // TODO: Set playerCurrentRoom to playerRoom : (playerController.playerCurrentRoom)
+void onPlayerMove() {
 	while (true) {
 		if (playerMoved == true) {
 			Room currentRoom;
-			//playerLastRoom = playerRoom;
+			globalPlayerController->playerCurrentRoom = playerRoom;
 			playerMoved = false;
 			currentRoom.room();
 		}
@@ -132,9 +144,26 @@ int main() {
 	cout << "INITIALIZING...\n";
 	PlayerController playerController(playerName);
 	playerController.player = playerName;
+	globalPlayerController = &playerController;
 
+	if (globalPlayerController->stage > 1) {
 	cout << "Greetings, " << playerName << "." << endl;
 	cout << "Now, where were we?\n\n";
+	}
+		else {
+			cout << "In the faraway world of Edoc-Dab, people are dying.\n";
+			cout << "The orc king Gromulech has gone mad after reigning\n";
+			cout << "for three hundred years. His paranoia has grown,\n";
+			cout << "and he believes humans will destroy the peace between the two peoples.\n";
+			cout << "Ruling with an iron fist, he began opressing the humans.\n";
+			cout << "They were helplessly made captive by the orcs' overwhelming might.\n";
+			cout << "But some can still stand. Some can still lead this fallen people\n";
+			cout << "from the terror of the orc king. WHO WILL RISE? WHO WILL FIGHT?\n";
+			cout << "WHO CAN DEFY THE WILL OF AN MADMAN COMMANDING LEGIONS OF OX-STRONG ORCS?\n";
+			cout << "...\n";
+			cout << "Who will SLAY THE ORC KING?\n\n";
+			globalPlayerController->stage++;
+		}
 	gameStarted = true;
 	Room rooms;
 	playerRoom = playerController.playerCurrentRoom;

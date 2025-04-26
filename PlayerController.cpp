@@ -15,6 +15,7 @@ int PlayerController::save() {
 			saveGame << mana << endl;
 			saveGame << maxMana << endl;
 			saveGame << level << endl;;
+			saveGame << stage;
 			saveGame.close();
 			cout << "DONE.\n" << endl;
 			return 0;
@@ -28,6 +29,7 @@ PlayerController::PlayerController(string& playerName) {
 	maxMana = 0;
 	level = 0;
 	playerCurrentRoom = 0;
+	stage = 0;
 
 		ifstream playerChar;
 		playerChar.open("PlayerSaves/" + player + ".txt");
@@ -35,13 +37,11 @@ PlayerController::PlayerController(string& playerName) {
 		string playerCharDestination;
 		int playerStat;
 
-		cout << "PlayerController.cpp ran with player name " << player << endl;
-
-		while(!playerChar.eof() && playerCharLine < 7) {
+		while(!playerChar.eof() && playerCharLine < 8) {
 			playerCharLine++;
 			getline(playerChar, playerCharDestination);
 
-		    if (playerCharLine < 2 || playerCharLine > 7) {
+		    if (playerCharLine < 2 || playerCharLine > 8) {
 		        continue; // Move to the next line without processing
 		    }
 
@@ -78,6 +78,10 @@ PlayerController::PlayerController(string& playerName) {
 
 			if(playerCharLine == 7) {
 				level = playerStat;
+			}
+			
+			if(playerCharLine == 8) {
+				stage = playerStat;
 				cout << "DONE.\n";
 				break;
 			}
@@ -91,6 +95,7 @@ PlayerController::PlayerController(string& playerName) {
 			maxMana = 10;
 			level = 1;
 			playerCurrentRoom = 1;
+			stage = 1;
 			playerChar.close();
 		}
 		save();
