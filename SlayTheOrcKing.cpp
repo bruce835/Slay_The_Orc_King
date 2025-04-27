@@ -9,17 +9,10 @@
 
 using namespace std;
 
-string playerRoomString;
-int iplayerCharLine = 0;
 string playerName;
-string playerSavePath;
-char playerNameDestination[10];
 string playerInput;
 bool gameStarted = false;
 int playerRoom;
-// Read/Write/Create playerSave File
-fstream playerSave;
-// Has player moved
 bool playerMoved = false;
 PlayerController* globalPlayerController = nullptr;
 
@@ -47,7 +40,6 @@ bool getPlayerInput(string &input) {
 		}
 }
 
-// Room Logic
 class Room {
 public:
 	int getRoom1Input() {
@@ -56,15 +48,13 @@ public:
 			return 1;
 		}
 		while (true) {
-			bool validInput = false;
 			if (playerInput == "north") {
 				cout << "Moving North" << endl;
 				playerRoom = 2;
 				playerMoved = true;
-				validInput = true;
 				return 3;
 			}
-			if (validInput == false) {
+			else  {
 				cout << "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?\n";
 				pIn();
 				break;
@@ -92,15 +82,13 @@ public:
 		}
 
 		while (true) {
-		bool validInput = false;
 		if (playerInput == "south") {
 				cout << "Moving South" << endl;
 				playerRoom = 1;
 				playerMoved = true;
-				validInput = true;
 				return 3;
 			}
-			if (validInput == false) {
+		else  {
                                 cout << "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?\n";
 				pIn();
 				break;
@@ -122,9 +110,8 @@ public:
 		return 3;
 	}
 
-	// Room Map
 	using roomFunction = function<int()>;
-	int room() {
+	int setRoom() {
 		map<int, roomFunction> roomMap = {{1, std::bind(&Room::room1, this)},
 										  {2, std::bind(&Room::room2, this)}};
 
@@ -137,20 +124,18 @@ public:
 	}
 };
 
-// Move Player
 void onPlayerMove() {
 	while (true) {
 		if (playerMoved == true) {
 			Room currentRoom;
 			globalPlayerController->playerCurrentRoom = playerRoom;
 			playerMoved = false;
-			currentRoom.room();
+			currentRoom.setRoom();
 		}
 	}
 }
 
 int main() {
-	// Start
 	cout << "Welcome To SLAY THE ORC KING" << endl;
 	cout << "..." << endl;
 	cout << "What is your name, adventurer?" << endl;
@@ -186,7 +171,7 @@ int main() {
 	playerRoom = playerController.playerCurrentRoom;
 
 	if (gameStarted == true) {
-		rooms.room();
+		rooms.setRoom();
 		thread playerMoveThread(onPlayerMove);
 		playerMoveThread.join();
 	}
