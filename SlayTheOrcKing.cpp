@@ -23,13 +23,23 @@ fstream playerSave;
 bool playerMoved = false;
 PlayerController* globalPlayerController = nullptr;
 
+int pIn() {
+	cout << playerName << ": ";
+	return 0;
+}
+
 bool getPlayerInput(string &input) {
 	if (input == "help") {
 		cout << "This is a list of basic commands: " << endl;
+		cout << "quit: save and quit game.\n";
+		cout << "north/southwest/east, etc.: move from room to room.\n";
+		pIn();
 		return true;
 	}
 		else if (input == "quit") {
-			cout << "Quitting" << endl;
+			cout << endl;
+			globalPlayerController->save();
+			cout << "SAFE TRAVELS, ADVENTURER.\n";
 			exit(0);
 	}
 		else {
@@ -43,26 +53,30 @@ public:
 	int getRoom1Input() {
 		std::cin >> playerInput;
 		if (getPlayerInput(playerInput)) {
-			return 3;
+			return 1;
 		}
+		while (true) {
 			bool validInput = false;
 			if (playerInput == "north") {
 				cout << "Moving North" << endl;
 				playerRoom = 2;
 				playerMoved = true;
 				validInput = true;
+				return 3;
 			}
 			if (validInput == false) {
 				cout << "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?\n";
-				cout << playerName << ": ";
+				pIn();
+				break;
 			}
-		return 3;
+		}
+		return 1;
 	}
 
 	int room1() {
 		playerRoom = 1;
 		cout << playerName << ": AAGH! What is that stench?" << endl;
-		cout << playerName << ": ";
+		pIn();
 		while (true && gameStarted == true) {
 			if(getRoom1Input() == 3) {
 				break;
@@ -74,28 +88,31 @@ public:
 	int getRoom2Input() {
 		std::cin >> playerInput;
 		if (getPlayerInput(playerInput)) {
-			return 3;
+			return 1;
 		}
 
+		while (true) {
 		bool validInput = false;
 		if (playerInput == "south") {
 				cout << "Moving South" << endl;
 				playerRoom = 1;
 				playerMoved = true;
 				validInput = true;
+				return 3;
 			}
 			if (validInput == false) {
                                 cout << "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?\n";
-                                cout << playerName << ": ";
+				pIn();
+				break;
                         }
-
-		return 3;
+		}
+		return 1;
 	}
 
 	int room2() {
 		playerRoom = 2;
-		cout << playerName << ": This isn't too much worse, smell wise" << endl;
-		cout << playerName << ": ";
+		cout << playerName << ": This isn't too much better, smell wise" << endl;
+		pIn();
 
 		while (true && gameStarted == true) {
 			if(getRoom2Input() == 3) {
