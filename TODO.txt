@@ -1,1 +1,1 @@
-Write output text over time;
+Set manual save.

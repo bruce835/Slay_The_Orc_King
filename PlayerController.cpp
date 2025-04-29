@@ -1,13 +1,16 @@
 #include "PlayerController.h"
 #include <fstream>
 #include <iostream>
+#include <sys/stat.h>
+#include <vector>
+#include <filesystem>
 using namespace std;
+namespace fs = filesystem;
 
 // Init playersave Variables
 int PlayerController::save() {
 			cout << "SAVING..." << endl;
-			ofstream saveGame("PlayerSaves/" + player +".txt", ios::trunc);
-			// Save Block (I don't feel like making this a function because I do not like pointers.
+			ofstream saveGame(saveFilePath, ios::trunc);
 			saveGame << "Player Name : " << player << ";" << endl;
 			saveGame << playerCurrentRoom << endl;
 			saveGame << health << endl;
@@ -21,6 +24,34 @@ int PlayerController::save() {
 			return 0;
 }
 
+int PlayerController::fetchSaves(string& saveFolder, ifstream& playerChar) {
+		cout << "Enter Save Name: ";
+		cin >> saveFile;
+
+		saveFilePath = ("PlayerSaves/" + player + "/" + saveFile + ".txt");
+		playerChar.open(saveFilePath);
+		if (!playerChar) {
+			saveFolder = "PlayerSaves/" + player;
+			int status = mkdir(saveFolder.c_str(), 0777);
+			playerChar.open(saveFilePath);
+		}
+
+		std::vector<std::string> saveList;
+		const string& saveFold = saveFolder;
+		for (const auto& entry : fs::directory_iterator(saveFold)) {
+        		if (fs::is_regular_file(entry)) {
+            			saveList.push_back(entry.path().filename().string());
+        		}
+    		}
+		
+		for (const string& fileName : saveList) {
+			if (saveFile + ".txt" == fileName) {
+				foundSave = true;
+			}
+		}	
+		return 0;
+}
+
 PlayerController::PlayerController(string& playerName) {
 	player = playerName;
 	health = 0;
@@ -29,10 +60,35 @@ PlayerController::PlayerController(string& playerName) {
 	maxMana = 0;
 	level = 0;
 	playerCurrentRoom = 0;
-	stage = 0;
+	stage = 0;	
+	foundSave = false;
 
+		string saveFolder = "PlayerSaves/" + player;
 		ifstream playerChar;
-		playerChar.open("PlayerSaves/" + player + ".txt");
+		fetchSaves(saveFolder, playerChar);	
+		string newSave;
+		if(!foundSave) {
+			cout << "Save not found. Create new save? y/n: ";
+			cin >> newSave;
+			if (newSave == "y") {
+				cout << "Creating new save...\n";
+				saveFilePath = ("PlayerSaves/" + player + "/" + saveFile + ".txt");
+				save();
+			}
+			else if (newSave == "n") {
+				fetchSaves(saveFolder, playerChar);
+			}
+			else {
+				cout << "Invalid command\n";
+			}
+		}
+		
+			else {
+			saveFilePath = ("PlayerSaves/" + player + "/" + saveFile + ".txt");
+			}
+		
+
+		
 		int playerCharLine = 0;
 		string playerCharDestination;
 		int playerStat;

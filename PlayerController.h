@@ -14,7 +14,11 @@ public:
 	int playerCurrentRoom;
 	std::string player;
 	int save();
+	int fetchSaves(std::string& saveFolder, std::ifstream& playerChar);
+	bool foundSave;
 	int stage;
+	std::string saveFilePath;
+	std::string saveFile;
 public:
 	PlayerController(std::string& playerName);
 };

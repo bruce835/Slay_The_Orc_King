@@ -1,8 +1,0 @@
-Player Name : newChar;
-1
-10
-10
-10
-10
-1
-2

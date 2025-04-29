@@ -27,7 +27,7 @@ int pIn() {
 }
 
 int out() {
-	chrono::milliseconds writeTime{55};
+	chrono::milliseconds writeTime{50};
 	outputLength = outString.length();
 	strcpy (output, outString.c_str());
 	int i = 0;
