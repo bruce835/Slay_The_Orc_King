@@ -6,6 +6,8 @@
 #include <map>
 #include <string>
 #include <thread>
+#include <chrono>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -15,24 +17,51 @@ bool gameStarted = false;
 int playerRoom;
 bool playerMoved = false;
 PlayerController* globalPlayerController = nullptr;
+string outString;
+int outputLength;
+char output[80];
 
 int pIn() {
 	cout << playerName << ": ";
 	return 0;
 }
 
+int out() {
+	chrono::milliseconds writeTime{55};
+	outputLength = outString.length();
+	strcpy (output, outString.c_str());
+	int i = 0;
+	while (true) {
+	if (i < outputLength) {
+	cout << output[i] << flush;
+	this_thread::sleep_for(writeTime);
+	i++;
+	}
+	else {
+		break;
+	}
+	}
+	cout << endl;
+	return 0;
+}
+
+		
 bool getPlayerInput(string &input) {
 	if (input == "help") {
-		cout << "This is a list of basic commands: " << endl;
-		cout << "quit: save and quit game.\n";
-		cout << "north/southwest/east, etc.: move from room to room.\n";
+		outString = "This is a list of basic commands: ";
+		out();
+		outString = "quit: save and quit game.";
+		out();
+		outString = "north/southwest/east, etc.: move from room to room.";
+		out();
 		pIn();
 		return true;
 	}
 		else if (input == "quit") {
 			cout << endl;
 			globalPlayerController->save();
-			cout << "SAFE TRAVELS, ADVENTURER.\n";
+			outString = "SAFE TRAVELS, ADVENTURER.";
+			out();
 			exit(0);
 	}
 		else {
@@ -43,31 +72,36 @@ bool getPlayerInput(string &input) {
 class Room {
 public:
 	int getRoom1Input() {
-		std::cin >> playerInput;
-		if (getPlayerInput(playerInput)) {
-			return 1;
-		}
-		while (true) {
-			if (playerInput == "north") {
-				cout << "Moving North" << endl;
+				std::cin >> playerInput;
+			if (getPlayerInput(playerInput)) {
+				return 1;
+			}
+				if(playerInput == "north") {
+				outString = "MOVING NORTH";
+				out();
 				playerRoom = 2;
 				playerMoved = true;
 				return 3;
 			}
 			else  {
-				cout << "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?\n";
+				outString = "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?";
+				out();
 				pIn();
-				break;
 			}
-		}
+		
 		return 1;
 	}
 
 	int room1() {
 		playerRoom = 1;
-		cout << playerName << ": AAGH! What is that stench?" << endl;
+		outString = playerName + ": AAGH! What is that stench?";
+		out();
+		outString = "Kohait: Werebat dung. The orcs gather it for medicinal purposes, believe it or not.";
+		out();
+		outString = playerName +  ": Fun. Okay, listen up!";
+		out();
 		pIn();
-		while (true && gameStarted == true) {
+		while (true && getRoom1Input() != 3) {
 			if(getRoom1Input() == 3) {
 				break;
 			}
@@ -83,13 +117,15 @@ public:
 
 		while (true) {
 		if (playerInput == "south") {
-				cout << "Moving South" << endl;
+				outString = "Moving South";
+				out();
 				playerRoom = 1;
 				playerMoved = true;
 				return 3;
 			}
 		else  {
-                                cout << "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?\n";
+                                outString = "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?";
+				out();
 				pIn();
 				break;
                         }
@@ -99,7 +135,8 @@ public:
 
 	int room2() {
 		playerRoom = 2;
-		cout << playerName << ": This isn't too much better, smell wise" << endl;
+		outString = playerName + ": This isn't too much better, smell wise";
+		out();
 		pIn();
 
 		while (true && gameStarted == true) {
@@ -136,34 +173,39 @@ void onPlayerMove() {
 }
 
 int main() {
-	cout << "Welcome To SLAY THE ORC KING" << endl;
-	cout << "..." << endl;
-	cout << "What is your name, adventurer?" << endl;
+	outString = "Welcome To SLAY THE ORC KING";
+	out();
+	outString = "...";
+	out();
+	outString = "What's your name, adventurer?";
+	out();
 	cout << "Adventurer: ";
 	cin >> playerName;
-
 	cout << endl;
-	cout << "INITIALIZING...\n";
+	outString = "INITIALIZING...";
+	out();
 	PlayerController playerController(playerName);
 	playerController.player = playerName;
 	globalPlayerController = &playerController;
 
 	if (globalPlayerController->stage > 1) {
-	cout << "Greetings, " << playerName << "." << endl;
-	cout << "Now, where were we?\n\n";
+	outString = "Greetings, " + playerName +  ".";
+	out();
+	outString = "Now, where were we?\n";
+	out();
 	}
 		else {
-			cout << "In the faraway world of Edoc-Dab, people are dying.\n";
-			cout << "The orc king Gromulech has gone mad after reigning\n";
-			cout << "for three hundred years. His paranoia has grown,\n";
-			cout << "and he believes humans will destroy the peace between the two peoples.\n";
-			cout << "Ruling with an iron fist, he began opressing the humans.\n";
-			cout << "They were helplessly made captive by the orcs' overwhelming might.\n";
-			cout << "But some can still stand. Some can still lead this fallen people\n";
-			cout << "from the terror of the orc king. WHO WILL RISE? WHO WILL FIGHT?\n";
-			cout << "WHO CAN DEFY THE WILL OF AN MADMAN COMMANDING LEGIONS OF OX-STRONG ORCS?\n";
-			cout << "...\n";
-			cout << "Who will SLAY THE ORC KING?\n\n";
+			outString = "In the faraway world of Edoc-Dab, people are dying.";
+			outString = "The orc king Gromulech has gone mad after reigning";
+			outString = "for three hundred years. His paranoia has grown,";
+			outString = "and he believes humans will destroy the peace between the two peoples.";
+			outString = "Ruling with an iron fist, he began opressing the humans.";
+			outString = "They were helplessly made captive by the orcs' overwhelming might.";
+			outString = "But some can still stand. Some can still lead this fallen people";
+			outString = "from the terror of the orc king. WHO WILL RISE? WHO WILL FIGHT?";
+			outString = "WHO CAN DEFY THE WILL OF AN MADMAN COMMANDING LEGIONS OF OX-STRONG ORCS?";
+			outString = "...";
+			outString = "Who will SLAY THE ORC KING?\n";
 			globalPlayerController->stage++;
 		}
 	gameStarted = true;

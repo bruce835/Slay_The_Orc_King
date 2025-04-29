@@ -40,7 +40,6 @@ PlayerController::PlayerController(string& playerName) {
 		while(!playerChar.eof() && playerCharLine < 8) {
 			playerCharLine++;
 			getline(playerChar, playerCharDestination);
-
 		    if (playerCharLine < 2 || playerCharLine > 8) {
 		        continue; // Move to the next line without processing
 		    }
@@ -48,10 +47,8 @@ PlayerController::PlayerController(string& playerName) {
 	        try {
 	            playerStat = stoi(playerCharDestination);
 	        } catch (const invalid_argument& e) {
-	            cerr << "Invalid data on line " << playerCharLine << ": " << playerCharDestination << endl;
 	            continue;
 	        } catch (const out_of_range& e) {
-	            cerr << "Number out of range on line " << playerCharLine << ": " << playerCharDestination << endl;
 	            continue;
 	        }
 
