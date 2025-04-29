@@ -1,1 +1,1 @@
-Write output text over time;
+Set option for multiple save files on one char; Add manual saving

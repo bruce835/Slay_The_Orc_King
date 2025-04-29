@@ -3,6 +3,8 @@
 #define PLAYERCONTROLLER_H
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <vector>
 
 class PlayerController {
 public:
@@ -15,6 +17,9 @@ public:
 	std::string player;
 	int save();
 	int stage;
+	std::vector<std::string> playerSaveVector;
+	std::vector<std::string> playerSaveVectorSelected;
+	std::string saveName;
 public:
 	PlayerController(std::string& playerName);
 };
