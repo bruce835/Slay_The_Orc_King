@@ -57,9 +57,14 @@ bool getPlayerInput(string &input) {
 		pIn();
 		return true;
 	}
+		else if (input == "save") {
+			globalPlayerController->fetchAndSave();
+			pIn();
+			return true;
+		}
 		else if (input == "quit") {
 			cout << endl;
-			globalPlayerController->save();
+			globalPlayerController->fetchAndSave();
 			outString = "SAFE TRAVELS, ADVENTURER.";
 			out();
 			exit(0);

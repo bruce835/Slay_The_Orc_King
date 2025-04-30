@@ -14,6 +14,8 @@ public:
 	int playerCurrentRoom;
 	std::string player;
 	int save();
+	int fetchAndSave();
+	std::string saveFolder;
 	int fetchSaves(std::string& saveFolder, std::ifstream& playerChar);
 	bool foundSave;
 	int stage;

@@ -1,1 +1,1 @@
-Set manual save.
+print avaiable saves on fetchSaves();
