@@ -9,32 +9,45 @@ namespace fs = filesystem;
 
 
 int PlayerController::fetchSaves(string& saveFolder, ifstream& playerChar) {
+		int fileCount = 0;	
+		std::vector<std::string> saveList;
+		const string& saveFold = saveFolder;
 		foundSave = false;
-		cout << "Enter Save Name: ";
+
+		for (const auto& entry : fs::directory_iterator(saveFold)) {
+        		if (fs::is_regular_file(entry)) {
+            			saveList.push_back(entry.path().filename().string());
+				fileCount++;
+        		}
+    		}
+		
+		if(fileCount > 0) {
+			cout << "Avaiable saves for " << player << endl;
+			for (const string& fileName : saveList) {
+				cout << "-" << fileName << endl; 
+			}
+		}
+		else {
+			cout << "No current saves for " << player << endl;
+		}
+
+		cout << "Enter Save Name(do not inlcude .txt extension): ";
 		cin >> saveFile;
 
 		saveFilePath = ("PlayerSaves/" + player + "/" + saveFile + ".txt");
 		playerChar.open(saveFilePath);
 		if (!playerChar) {
-			saveFolder = "PlayerSaves/" + player;
 			int status = mkdir(saveFolder.c_str(), 0777);
 			playerChar.open(saveFilePath);
 		}
-
-		std::vector<std::string> saveList;
-		const string& saveFold = saveFolder;
-		for (const auto& entry : fs::directory_iterator(saveFold)) {
-        		if (fs::is_regular_file(entry)) {
-            			saveList.push_back(entry.path().filename().string());
-        		}
-    		}
-		
+		vector<string>::iterator it = saveList.begin();
 		for (const string& fileName : saveList) {
 			if (saveFile + ".txt" == fileName) {
 				foundSave = true;
 			}
 		}	
-		return 0;
+		
+	return 0;
 }
 
 int PlayerController::save() {

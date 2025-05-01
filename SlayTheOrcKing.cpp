@@ -48,9 +48,11 @@ int out() {
 		
 bool getPlayerInput(string &input) {
 	if (input == "help") {
-		outString = "This is a list of basic commands: ";
+		outString = "This is a list of basic commands(NOTE: ALL COMMANDS ARE CASE-SENSITIVE): ";
 		out();
 		outString = "quit: save and quit game.";
+		out();
+		outString = "save: save without quitting.";
 		out();
 		outString = "north/southwest/east, etc.: move from room to room.";
 		out();
