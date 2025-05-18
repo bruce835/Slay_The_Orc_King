@@ -32,17 +32,24 @@ int out() {
 	strcpy (output, outString.c_str());
 	int i = 0;
 	while (true) {
-	if (i < outputLength) {
-	cout << output[i] << flush;
-	this_thread::sleep_for(writeTime);
-	i++;
-	}
-	else {
-		break;
-	}
+    if (i < outputLength) {
+      cout << output[i] << flush;
+      this_thread::sleep_for(writeTime);
+      i++;
+    }
+
+    else {
+      break;
+    }
 	}
 	cout << endl;
 	return 0;
+}
+
+int pOut(const string& speech) {
+  outString = (playerName + ": " + speech); 
+  out();
+  return 0;
 }
 
 		
@@ -83,12 +90,13 @@ public:
 			if (getPlayerInput(playerInput)) {
 				return 1;
 			}
-				if(playerInput == "north") {
-				outString = "MOVING NORTH";
-				out();
-				playerRoom = 2;
-				playerMoved = true;
-				return 3;
+
+      if(playerInput == "north") {
+        outString = "MOVING NORTH";
+        out();
+        playerRoom = 2;
+        playerMoved = true;
+        return 3;
 			}
 			else  {
 				outString = "NOT A VALID COMMAND. WHO HIRED YOU, ANYWAYS?";
@@ -142,8 +150,7 @@ public:
 
 	int room2() {
 		playerRoom = 2;
-		outString = playerName + ": This isn't too much better, smell wise";
-		out();
+	  pOut("This isn't too much better, smell wise.\n Orcs can't stray from their fountain for too long, it's the only reason\nthey can survive here.\nThis is about endurance and stealth. Within the hour, they'll know we're gone.\nOver the next few days, we must run and hide, run and hide. Eventually they'll\nhave no choice but to turn back.");
 		pIn();
 
 		while (true && gameStarted == true) {
