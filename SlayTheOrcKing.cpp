@@ -46,8 +46,8 @@ int out() {
 	return 0;
 }
 
-int pOut(const string& speech) {
-  outString = (playerName + ": " + speech); 
+int talk(const string& speech, string name = playerName) {
+  outString = (name + ": " + speech); 
   out();
   return 0;
 }
@@ -109,10 +109,8 @@ public:
 
 	int room1() {
 		playerRoom = 1;
-		outString = playerName + ": AAGH! What is that stench?";
-		out();
-		outString = "Kohait: Werebat dung. The orcs gather it for medicinal purposes, believe it or not.";
-		out();
+		talk("AAGH! What is that stench?");
+		talk("Werebat dung. The orcs gather it for medicinal purposes, believe it or not.", "Kohait");
 		outString = playerName +  ": Fun. Okay, listen up!";
 		out();
 		pIn();
@@ -150,7 +148,7 @@ public:
 
 	int room2() {
 		playerRoom = 2;
-	  pOut("This isn't too much better, smell wise.\n Orcs can't stray from their fountain for too long, it's the only reason\nthey can survive here.\nThis is about endurance and stealth. Within the hour, they'll know we're gone.\nOver the next few days, we must run and hide, run and hide. Eventually they'll\nhave no choice but to turn back.");
+	  talk("This isn't too much better, smell wise.\n Orcs can't stray from their fountain for too long, it's the only reason\nthey can survive here.\nThis is about endurance and stealth. Within the hour, they'll know we're gone.\nOver the next few days, we must run and hide, run and hide. Eventually they'll\nhave no choice but to turn back.");
 		pIn();
 
 		while (true && gameStarted == true) {

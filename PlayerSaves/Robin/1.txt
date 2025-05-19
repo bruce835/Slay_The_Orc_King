@@ -1,5 +1,5 @@
 Player Name : Robin;
-1
+2
 10
 10
 10
